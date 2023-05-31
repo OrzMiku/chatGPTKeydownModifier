@@ -8,6 +8,7 @@
 // @match        https://chat.openai.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=openai.com
 // @grant        none
+// @license      MIT
 // @run-at       document-end
 // ==/UserScript==
 
