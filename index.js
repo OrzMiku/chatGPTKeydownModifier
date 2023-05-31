@@ -2,7 +2,7 @@
 // @name         ChatGPT按键修改
 // @namespace    chatGPTKeydownModifier
 // @version      0.1
-// @description  将chatgpt官网，发送消息的按键修改为类似于QQ发送消息的逻辑
+// @description  增强ChatGPT网站的按键行为，实现类似QQ的消息发送逻辑，按下Enter键发送消息，按下(Shift/Ctrl)+Enter键插入换行。
 // @author       OrzMiku
 // @homepage     https://github.com/OrzMiku/chatGPTKeydownModifier
 // @match        https://chat.openai.com/*
