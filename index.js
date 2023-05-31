@@ -1,0 +1,83 @@
+// ==UserScript==
+// @name         ChatGPT按键修改
+// @namespace    chatGPTKeydownModifier
+// @version      0.1
+// @description  将chatgpt官网，发送消息的按键修改为类似于QQ发送消息的逻辑
+// @author       OrzMiku
+// @homepage     https://github.com/OrzMiku/chatGPTKeydownModifier
+// @match        https://chat.openai.com/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=openai.com
+// @grant        none
+// @run-at       document-end
+// ==/UserScript==
+
+
+(function () {
+    // 使用严格模式
+    'use strict';
+
+    // 检测DOM元素是否载入
+    function domChecker(selector, callback) {
+        const checker = setInterval(() => {
+            const element = document.querySelector(selector);
+            if (element) {
+                callback();
+                // 清除定时器
+                clearInterval(checker);
+                console.log('页面载入完成');
+            }
+        }, 300);
+    }
+
+    // 滚动条定位到光标位置
+    function scrollToCursor(textarea) {
+        // 获取光标位置
+        var cursorPos = textarea.selectionStart;
+        // 获取光标所在行数
+        var lines = textarea.value.substr(0, cursorPos).split("\n");
+        var lineCount = lines.length;
+        // 获取每行的高度
+        var lineHeight = textarea.scrollHeight / textarea.rows;
+        // 计算滚动条的位置
+        var scrollTop = lineHeight * lineCount;
+        // 设置滚动条位置
+        textarea.scrollTop = scrollTop;
+    }
+
+    // 插入换行函数
+    function insert(textarea) {
+        const start = textarea.selectionStart; // 光标起始位置
+        const end = textarea.selectionEnd; // 光标结束位置
+        const value = textarea.value; // 获取value值
+        const newValue = value.substring(0, start) + '\n' + value.substring(end); // 插入换行符
+        textarea.value = newValue; // 更新textarea的值
+        textarea.selectionStart = textarea.selectionEnd = start + 1; // 将光标定位到插入的换行符后面
+        const inputEvent = new Event('input', { bubbles: true }); // 创建输入对象，用于更新高度
+        textarea.dispatchEvent(inputEvent);
+        scrollToCursor(textarea);
+    }
+
+    // 监听
+    domChecker('form', () => {
+        let form = document.querySelector('form');
+        form.removeEventListener('keydown');
+        let textarea = form.querySelector('textarea');
+        let btn = form.querySelector('button');
+        form.addEventListener('keydown', (e) => {
+            e.stopPropagation();
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                // console.log('ctrl+enter!');
+                e.preventDefault(); // 阻止默认事件
+                btn.click(); // 模拟点击提交
+            } else if (e.shiftKey && e.key === 'Enter') {
+                // console.log('shift+enter!');
+                e.preventDefault(); // 阻止默认事件
+                insert(textarea); // 插入换行
+            } else if (e.key === 'Enter') {
+                // console.log('only enter!');
+                e.preventDefault(); // 阻止默认事件
+                insert(textarea); // 插入换行
+            }
+        }, true);
+    });
+})();
