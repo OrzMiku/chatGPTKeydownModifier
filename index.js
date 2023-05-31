@@ -17,6 +17,11 @@
     // 使用严格模式
     'use strict';
 
+    // 模式设置
+    // 0：enter发送消息，ctrl+enter换行
+    // 1：ctrl+enter发送消息，enter换行
+    const mode = 0;
+
     // 检测DOM元素是否载入
     function domChecker(selector, callback) {
         const checker = setInterval(() => {
@@ -67,17 +72,17 @@
         form.addEventListener('keydown', (e) => {
             e.stopPropagation();
             if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                // console.log('ctrl+enter!');
                 e.preventDefault(); // 阻止默认事件
-                btn.click(); // 模拟点击提交
+                if (mode === 0) insert(textarea);
+                else btn.click();
             } else if (e.shiftKey && e.key === 'Enter') {
-                // console.log('shift+enter!');
+
                 e.preventDefault(); // 阻止默认事件
-                insert(textarea); // 插入换行
+                insert(textarea);
             } else if (e.key === 'Enter') {
-                // console.log('only enter!');
                 e.preventDefault(); // 阻止默认事件
-                insert(textarea); // 插入换行
+                if (mode === 0) btn.click();
+                else insert(textarea);
             }
         }, true);
     });
